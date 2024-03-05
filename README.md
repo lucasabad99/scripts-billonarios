@@ -15,22 +15,25 @@ Fecha de entrega: 22/1/2024
 5. Diagrama de entidad relación
 6. Listado de tablas
 7. Scripts de creación de objetos de la base de datos
+   
    7.1 Script Funciones
+   
    7.2 Script Stored Procedure
+   
    7.3 Script Triggers
    7.4 Script Vistas
    7.5 Script Create tables
    7.6 Script Transacciones
    7.7Script System Users 
-8. Scripts de inserción de datos
+9. Scripts de inserción de datos
    8.1 Script Inserción de datos en Billonarios
    8.2 Script Inserción de datos en CategoriasNegocio
    8.3 Script Inserción de datos en Estados
    8.4 Script Inserción de datos en Organizaciones
    8.5 Script Inserción de datos en Países
-9. Informes generados
-10. Herramientas y tecnologías usadas
-11. Futuras líneas
+10. Informes generados
+11. Herramientas y tecnologías usadas
+12. Futuras líneas
 
 
 ####  **1) Introducción:**
