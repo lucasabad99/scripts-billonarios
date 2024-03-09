@@ -15,11 +15,8 @@ Fecha de entrega: 22/1/2024
 5. Diagrama de entidad relación
 6. Listado de tablas
 7. Scripts de creación de objetos de la base de datos
-   
    7.1 Script Funciones
-   
    7.2 Script Stored Procedure
-   
    7.3 Script Triggers
    7.4 Script Vistas
    7.5 Script Create tables
