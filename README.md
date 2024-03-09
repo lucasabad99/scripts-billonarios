@@ -1,18 +1,13 @@
-Billonario$
- 
+###Billonario$
 
-
-
-
-
-Autor: LUCAS EMIR ABAD CANCINOS
+Autor: **LUCAS EMIR ABAD CANCINOS**
 Profesor: Gabriel Almiñana
 Tutor: Natalie Bassano – Ariel Annone
 Comisión: 50050
 Fecha de entrega: 22/1/2024
 
 
-Índice
+**Índice**
 1. Introducción
 2. Objetivo
 3. Situación problemática
@@ -20,22 +15,37 @@ Fecha de entrega: 22/1/2024
 5. Diagrama de entidad relación
 6. Listado de tablas
 7. Scripts de creación de objetos de la base de datos
+   
    7.1 Script Funciones
+
    7.2 Script Stored Procedure
+
    7.3 Script Triggers
+
    7.4 Script Vistas
+
    7.5 Script Create tables
+
    7.6 Script Transacciones
-   7.7Script System Users 
-8. Scripts de inserción de datos
+
+   7.7Script System Users
+   
+9. Scripts de inserción de datos
+
    8.1 Script Inserción de datos en Billonarios
+
    8.2 Script Inserción de datos en CategoriasNegocio
+
    8.3 Script Inserción de datos en Estados
+
    8.4 Script Inserción de datos en Organizaciones
+
    8.5 Script Inserción de datos en Países
-9. Informes generados
-10. Herramientas y tecnologías usadas
-11. Futuras líneas
+
+11. Informes generados
+12. Herramientas y tecnologías usadas
+13. Futuras líneas
+
 
 
 
@@ -69,118 +79,169 @@ En resumen, este proyecto no es solo una exploración de datos; es un viaje educ
 A medida que avanzamos, no solo desciframos datos, sino que también forjamos habilidades que nos acompañarán en futuras travesías analíticas. ¡Bienvenidos a este emocionante viaje de aprendizaje!
 
 #### 3) Situación Problemática: Desafíos y Soluciones en la Implementación del Proyecto
+
 A lo largo de la ejecución de este proyecto, me encontré inmerso en diversos desafíos que, aunque inicialmente parecían obstáculos insalvables, se transformaron en oportunidades valiosas de aprendizaje y resolución. Estos contratiempos, en su mayoría relacionados con la importación de datos y la ejecución de consultas, pusieron a prueba mis habilidades y, al mismo tiempo, me proporcionaron una visión más profunda sobre la mecánica interna de MySQL.
+
 **Limitaciones en la Importación de Datos**
+
 Al dar los primeros pasos en la carga de datos, me enfrenté a una limitación en la cantidad de registros que podía importar a través del Data Import Wizard de MySQL. Inicialmente, intenté cargar 2060 registros por tabla, pero me percaté de que solo se importaban 1000. Este problema residía en la configuración predeterminada, que limitaba la importación a 1000 filas. La solución fue ajustar esta configuración, permitiendo así la importación completa de todos los datos.
+
 **Errores en una Función**
+
 En una etapa más avanzada, me encontré con un dilema al descubrir que una función devolvía resultados incorrectos en ciertas condiciones. Después de una minuciosa revisión, identifiqué que el problema radicaba en una condición dentro de un bloque "if". Al cumplirse esta condición, la función no retornaba el valor esperado. La solución fue revisar y corregir la lógica condicional, asegurándome de que todas las ramificaciones fueran manejadas adecuadamente.
+
 **Importación de Datos y Restricciones en el Modelo Relacional**
+
 Una de las situaciones más complejas surgió al importar datos tabla por tabla, especialmente al intentar cargar datos en una tabla de dimensiones antes de haber llenado la tabla de hechos. Dado que el modelo relacional ya estaba establecido, las restricciones impidieron la inserción directa en la tabla de dimensiones. Para superar este obstáculo, opté por temporariamente desactivar las restricciones, permitiendo así ingresar datos uno por uno. Posteriormente, restablecí las restricciones y resolví este inconveniente al asegurarme de ingresar datos en orden, primero en la tabla de hechos y luego en las tablas de dimensiones.
+
 **Lecciones Aprendidas y Perspectivas Futuras**
+
 Estos desafíos no solo representaron momentos de frustración momentánea, sino también oportunidades cruciales de aprendizaje. Cada problema resuelto no solo mejoró la ejecución del proyecto, sino que también contribuyó al desarrollo de habilidades fundamentales en la administración de bases de datos utilizando SQL. A medida que avanzo, queda claro que estos desafíos son trampolines para el crecimiento y la mejora continua en la manipulación y gestión de datos mediante herramientas SQL.
 
 #### 4) Modelo de Negocio: 
+
  **Núcleo de la Riqueza Empresarial**
+
 En el corazón de nuestro análisis empresarial, la "Tabla de Billonarios" constituye el epicentro de la riqueza. Aquí, cada entrada representa un individuo excepcional, detallando elementos cruciales como su nombre completo, edad, género, fecha de nacimiento y, lo más significativo, su conexión con el mundo de los negocios. La categoría de negocio y la organización asociada son pilares fundamentales, arrojando luz sobre cómo estos individuos han estructurado sus empresas y relaciones comerciales. 
+
 **El Contexto Económico y Geográfico**
+
 A medida que exploramos el modelo de negocio, la "Tabla de Países" sirve como un atlas económico, revelando el entorno financiero y geográfico en el que estos billonarios operan. Índices cruciales, como el IPC y el PIB, junto con datos demográficos, proporcionan una perspectiva clara de los factores externos que influyen en las estrategias empresariales de estos individuos.
+
 **Geografía Empresarial Detallada**
+
 Al adentrarnos en los detalles regionales, la "Tabla de Estados" se convierte en un mapa detallado de las ubicaciones específicas que estos titanes de los negocios han elegido para establecerse. Desde la región hasta las coordenadas geoespaciales, esta tabla aporta información vital sobre la distribución geográfica de sus operaciones, vinculando directamente su presencia con estrategias empresariales específicas.
+
 **Sectores Estratégicos de Crecimiento**
+
 La riqueza de los billonarios está intrínsecamente vinculada a las áreas de negocio en las que han decidido participar. La "Tabla de Categorías de Negocio" desglosa detalladamente las categorías, industrias y otros aspectos relevantes que delinean cómo han construido y diversificado sus carteras empresariales. Este análisis nos permite identificar sectores estratégicos de crecimiento y las tendencias que impulsan su éxito.
+
 **Asociaciones Empresariales Clave**
+
 En nuestro modelo de negocio, la "Tabla de Organizaciones" emerge como un compendio de las asociaciones empresariales que respaldan la riqueza de estos individuos. Detalles como la fuente de ingresos, el patrimonio neto y la fuente de riqueza proporcionan una visión valiosa de las entidades empresariales clave. Al explorar esta tabla, trazamos las conexiones esenciales que impulsan el éxito y la influencia de estos billonarios.
+
 **Conclusión del Modelo de Negocio**:
+
 A medida que avanzamos a través de estas tablas, no solo estamos examinando datos; estamos narrando la historia detrás de la riqueza de los billonarios. Cada tabla, cada entrada, revela una parte crucial del modelo de negocio que ha permitido a estos individuos destacar en el mundo empresarial global. Este análisis no solo es una exploración de datos; es un viaje hacia la comprensión profunda de cómo se estructuran, operan y triunfan en el exclusivo mundo de los billonarios.
 
 #### 5)  DIAGRAMA ENTIDAD RELACION
 
 6) Listado de tablas
-Tabla	Clave Primaria	Clave Foránea	Campo Abreviado	Nombre Completo	Tipo de Datos
-Billonarios	Id Billonario	-	IdBil	ID del Billonario	Entero
- 	-	-	Nombre Completo	Nombre completo	Texto
- 	-	-	Edad	Edad del Billonario	Entero
- 	-	-	Género	Género del Billonario	Texto
- 	-	-	FechaCumpleaños	Fecha de Cumpleaños	Fecha
- 	-	Sí	IdPaís	ID del País de Residencia	Entero
- 	-	Sí	IdEstado	ID del Estado de Residencia	Entero
- 	-	Sí	IdCategoriaNeg	ID de la Categoría de Negocio	Entero
- 	-	Sí	IdOrganizacion	ID de la Organización	Entero
- 	-	-	Apellido	Apellido del Billonario	Texto
- 	-	-	Nombre	Nombre del Billonario	Texto
-Países	Id País	-	IdPaís	ID del País	Entero
-		 Id estado	IdEstado	ID del país	Entero
- 	-	-	IPCPaís	IPC del País de Residencia	Decimal
- 	-	-	PBIPaís	PBI del País de Residencia	Decimal
- 	-	-	InscEduTerc	Tasa de Inscripción Terciaria	Decimal
- 	-	-	MatEduPrim	Tasa de Matriculación Primaria	Decimal
- 	-	-	EsperanzaVida	Esperanza de Vida	Decimal
- 	-	-	IngresosFiscales	Ingresos Fiscales	Decimal
- 	-	-	TasaImpositiva	Tasa Impositiva Total	Decimal
- 	-	-	PoblaciónPaís	Población del País	Entero
- 	-	-	PaísResidencia	Nombre del País de Residencia	Texto
-Estados	Id Estado	-	IdEstado	ID del Estado	Entero
- 	-	-	RegiónResidencia	Región de Residencia	Texto
- 	-	-	CiudadResidencia	Ciudad de Residencia	Texto
- 	-	-	Estado	Estado de Residencia	Texto
- 	-	-	LatitudPaísRes	Latitud del País de Residencia	Decimal
- 	-	-	LongitudPaísRes	Longitud del País de Residencia	Decimal
-Categorías Negocio	Id Categoría Negocio	-	IdCatNegocio	ID de Categoría de Negocio	Entero
- 	-	-	Categoría	Nombre de la Categoría	Texto
- 	-	-	Industria	Industria relacionada	Texto
- 	-	-	HechoPorSiMismo	¿Hecho Por Si Mismo?	Booleano
- 	-	-	Título	Título relacionado	Texto
- 	-	-	Rango	Rango de la Categoría	Texto
-Organizaciones	Id Organización	-	IdOrganizacion	ID de la Organización	Entero
- 	-	-	FuenteIngreso	Fuente de Ingresos	Texto
- 	-	-	Organización	Nombre de la Organización	Texto
- 	-	-	PatrimonioNeto	Patrimonio Neto	Decimal
- 	-	-	FuenteRiqueza	Fuente de Riqueza	Texto
+Tabla          Clave Primaria       Clave Foránea       Campo Abreviado       Nombre Completo           Tipo de Datos
+---------------------------------------------------------------------------------------------------------------------
+Billonarios   IdBillonario           -                   IdBillo               ID del Billonario        Entero
+              -                      -                   Nombre Completo      Nombre completo          Texto
+              -                      -                   Edad                 Edad del Billonario      Entero
+              -                      -                   Género               Género del Billonario    Texto
+              -                      -                   FechaCumpleaños      Fecha de Cumpleaños      Fecha
+              Sí                     IdPaís              ID del País          ID del País de Residencia Entero
+              Sí                     IdEstado            ID del Estado        ID del Estado de Residencia Entero
+              Sí                     IdCategoriaNeg      ID de la Categoría de Negocio Entero
+              Sí                     IdOrganizacion      ID de la Organización ID de la Organización     Entero
+              -                      -                   Apellido             Apellido del Billonario   Texto
+              -                      -                   Nombre               Nombre del Billonario     Texto
+
+Países        Id País                -                   IdPaís               ID del País               Entero
+              -                      IdEstado            ID del país          ID del país               Entero
+              -                      -                   IPCPaís              IPC del País de Residencia Decimal
+              -                      -                   PBIPaís              PBI del País de Residencia Decimal
+              -                      -                   InscEduTerc          Tasa de Inscripción Terciaria Decimal
+              -                      -                   MatEduPrim           Tasa de Matriculación Primaria Decimal
+              -                      -                   EsperanzaVida        Esperanza de Vida         Decimal
+              -                      -                   IngresosFiscales     Ingresos Fiscales         Decimal
+              -                      -                   TasaImpositiva       Tasa Impositiva Total     Decimal
+              -                      -                   PoblaciónPaís        Población del País         Entero
+              -                      -                   PaísResidencia       Nombre del País de Residencia Texto
+
+Estados       Id Estado              -                   IdEstado             ID del Estado              Entero
+              -                      -                   RegiónResidencia     Región de Residencia       Texto
+              -                      -                   CiudadResidencia     Ciudad de Residencia       Texto
+              -                      -                   Estado               Estado de Residencia       Texto
+              -                      -                   LatitudPaísRes       Latitud del País de Residencia Decimal
+              -                      -                   LongitudPaísRes      Longitud del País de Residencia Decimal
+
+Categorías Negocio
+              Id Categoría Negocio   -                   IdCatNegocio         ID de Categoría de Negocio Entero
+              -                      -                   Categoría            Nombre de la Categoría      Texto
+              -                      -                   Industria            Industria 
+
 
 #### 7)  Scripts de creación de objetos de la base de datos
 **7.1 SCRIPT DE FUNCIONES**
+
 **FUNCION 1**
 
 delimiter //
+
 CREATE FUNCTION `ObtenerEdadBillonario`(billonario_id INT) -- obtiene la edad del billonario junto con su nombrecompleto
+
 RETURNS json
+
     READS SQL DATA
+    
     DETERMINISTIC
+    
 BEGIN
+    
     DECLARE info JSON;
+    
     SELECT JSON_OBJECT(NombreCompleto, Edad )
+    
     INTO info
+    
     FROM billonarios
+    
     WHERE IdBillonario = billonario_id;
+    
     RETURN info;
+
 END
 
-**•	Descripción**: Esta función retorna un objeto JSON que contiene el nombre completo y la edad de un billonario específico, identificado por su IdBillonario.
+•	**Descripción**: Esta función retorna un objeto JSON que contiene el nombre completo y la edad de un billonario específico, identificado por su IdBillonario.
+
 •	**Uso**: SELECT ObtenerEdadBillonario(1);
+
 •	**Resultado Esperado**:{"NombreCompleto": "Nombre Apellido", "Edad": 45}
 
 **FUNCION 2**
+
 delimiter // -- esta funcion obtiene nombre de la organizacion junto con el nombre completo del billonario
 
 CREATE FUNCTION `ObtenerEmpresaCash`(billonario_id INT) RETURNS json
+
     READS SQL DATA
+    
     DETERMINISTIC
+
 BEGIN
+
     DECLARE info JSON;
+    
     SELECT JSON_OBJECT( b.NombreCompleto, o.Organizacion)
+    
     INTO info
+    
     FROM billonarios AS b
+    
     JOIN organizaciones AS o ON b.IdOrganizacion = o.IdOrganizacion
+    
     WHERE b.IdBillonario = billonario_id;
+    
     RETURN info;
 END
+
 •	**Descripción**: La función devuelve un objeto JSON que asocia el nombre completo del billonario con el nombre de la organización a la que está vinculado.
+
 •	**Uso**: SELECT ObtenerEmpresaCash(1);
+
 •	**Resultado Esperado**: {"NombreCompleto": "Nombre Apellido", "Organizacion": "Nombre de la Empresa"}
 
 **FUNCION 3**
+
 delimiter // -- devuelve el nombre de la organizacon
+
 CREATE FUNCTION `ObtenerOrganizacion`(billonario_id INT) RETURNS varchar(255) 
+
     READS SQL DATA
     DETERMINISTIC
 BEGIN
