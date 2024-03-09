@@ -1,9 +1,13 @@
-###Billonario$
+###BillonarioS
 
 Autor: **LUCAS EMIR ABAD CANCINOS**
+
 Profesor: Gabriel Almiñana
+
 Tutor: Natalie Bassano – Ariel Annone
+
 Comisión: 50050
+
 Fecha de entrega: 22/1/2024
 
 
@@ -167,6 +171,7 @@ Categorías Negocio
 
 
 #### 7)  Scripts de creación de objetos de la base de datos
+
 **7.1 SCRIPT DE FUNCIONES**
 
 **FUNCION 1**
@@ -243,88 +248,160 @@ delimiter // -- devuelve el nombre de la organizacon
 CREATE FUNCTION `ObtenerOrganizacion`(billonario_id INT) RETURNS varchar(255) 
 
     READS SQL DATA
+    
     DETERMINISTIC
 BEGIN
     DECLARE nombre_organizacion VARCHAR(255);  -- Ajusta el tipo de dato según la columna 'Organización'
+    
     SELECT Organizacion  -- Reemplaza 'Organizacion' con el nombre de la columna que almacena la organización
+    
     INTO nombre_organizacion
+    
     FROM Organizaciones
+    
     WHERE IdOrganizacion = billonario_id;
+    
     RETURN nombre_organizacion;
+
 END
 
+
 •	**Descripción**: Retorna el nombre de la organización asociada al billonario identificado por su IdBillonario.
+
 •	**Uso**: SELECT ObtenerOrganizacion(1);
+
 •	**Resultado Esperado**: Nombre de la Empresa
 
 **FUNCION 4**
+
 DELIMITER // -- esta funcion obtiene el patrimonio de la empresa del usuario(billonario)
+
 CREATE FUNCTION `ObtenerPatrimonioNeto`(billonario_id INT) 
+
     RETURNS decimal(10,2)
+    
     READS SQL DATA
+    
     DETERMINISTIC
+
 BEGIN
+
     DECLARE patrimonio_neto DECIMAL(10, 2);  -- Ajusta el tipo de dato según la columna 'PatrimonioNeto'
+    
     SELECT PatrimonioNeto  -- Reemplaza 'PatrimonioNeto' con el nombre de la columna que almacena el patrimonio neto
+    
     INTO patrimonio_neto
+    
     FROM Organizaciones
+    
     WHERE IdOrganizacion = billonario_id;
+    
     RETURN patrimonio_neto;
+
 END
+
 •	**Descripción**: Esta función devuelve el patrimonio neto de la organización asociada a un billonario especificado por su IdBillonario.
+
 •	**Uso**: SELECT ObtenerPatrimonioNeto(1);
+
 •	**Resultado Esperado**: 100000000.00
+
 **FUNCION 5**
+
 DELIMITER //
+
 CREATE FUNCTION EstadoInflacionario(IdPais INT) 
+
 RETURNS VARCHAR(50)
+
 READS SQL DATA
+
 BEGIN
+
     DECLARE ipc_pais DECIMAL(5,2);
+    
     DECLARE resultado VARCHAR(50);
+    
     -- Obtenemos el IPC del país con el ID proporcionado
+    
     SELECT IPCPais INTO ipc_pais 
+    
     FROM paises
+    
     WHERE IdPais = IdPais 
+    
     LIMIT 1;
+    
     -- Verificamos si el IPC es mayor o igual a 100 y asignamos el resultado a la variable resultado
+    
     IF ipc_pais >= 100 THEN
-        SET resultado = 'País Inflacionario';
+    
+	SET resultado = 'País Inflacionario';
+    
     ELSEIF ipc_pais <= 100 THEN
+    
       SET resultado = 'No es País Inflacionario';
+    
     END if;
+    
     RETURN resultado; -- Retornamos el valor almacenado en la variable resultado
+
 END //
 
 •	**Descripción**: Determina si un país es inflacionario o no, basándose en su Índice de Precios al Consumidor (IPC). La función toma un IdPais como parámetro.
+
 •	**Uso**: SELECT EstadoInflacionario(1);
+
 •	**Resultado Esperado**: País Inflacionario
 
 **FUNCION 6**
 
 DELIMITER //
+
 CREATE FUNCTION TipodeBILLO (IdOrganizacion INT) 
+
     RETURNS varchar(50)
+    
     READS SQL DATA
+    
     DETERMINISTIC
+
 BEGIN
+
     DECLARE patrimonio_neto DECIMAL(10,2); -- Asegúrate de definir el tipo de dato correcto
+    
     DECLARE resultado VARCHAR(50);
+    
     SELECT PatrimonioNeto
+    
     INTO patrimonio_neto
+    
     FROM Organizaciones
+    
     WHERE IdOrganizacion = IdOrganizacion -- Utiliza el parámetro que estás recibiendo
+    
     limit 1; 
+    
     IF patrimonio_neto >= 4600 THEN
-        SET resultado = 'TIENE MUCHISIMA PLATA';
+    
+	SET resultado = 'TIENE MUCHISIMA PLATA';
+    
     ELSE
-        SET resultado = 'Es normalito';
+    
+	SET resultado = 'Es normalito';
+    
     END IF;
+    
     RETURN resultado;
+
 END//
+
 DELIMITER ;
+
 •	**Descripción**: Clasifica el nivel de riqueza de una organización según su patrimonio neto. Utiliza el IdOrganizacion como parámetro.
+
 •	**Uso**: SELECT TipodeBILLO(1);
+
 •	**Resultado Esperado**: TIENE MUCHISIMA PLATA
 
 
@@ -332,170 +409,318 @@ DELIMITER ;
 
 **1)	**
 delimiter //
+
 CREATE PROCEDURE actividad(IN fx VARCHAR(100)) -- Se escribe el nombre y automaticamente se inserta como nuevo registro y se muestra ccon un order by desc.
+
 BEGIN
+
     DECLARE mensaje VARCHAR(100);
+    
     IF fx <> '' THEN
-        INSERT INTO billonarios (NombreCompleto) VALUES (fx);
+    
+	INSERT INTO billonarios (NombreCompleto) VALUES (fx);
+    
     ELSE
+    
         SET mensaje = 'ERROR: no se pudo crear el producto indicado';
+    
     END IF;
+    
     IF mensaje IS NOT NULL THEN
-        SELECT mensaje AS Resultado;
+    
+	SELECT mensaje AS Resultado;
+    
     ELSE
+    
     SET @consulta = 'SELECT * FROM billonarios ORDER BY IdBillonario DESC';
+    
     PREPARE runsql FROM @consulta;
+    
     EXECUTE runsql;
+    
     DEALLOCATE PREPARE runsql;
+    
     END IF;
+
 END;
 
 •	**Descripción**: Este procedimiento almacena una nueva actividad en la tabla billonarios con el nombre especificado en el parámetro fx. Luego, muestra todos los registros ordenados por IdBillonario de forma descendente.
+
 •	**Uso**: CALL actividad('Nuevo Billonario');
+
 •	**Resultado Esperado**:
+
 Nuevo registro insertado correctamente 
+
 | IdBillonario  | NombreCompleto     
+
 | 5             | Nuevo Billonario 
+
 | 4             | Billonario 4       
+
 | 3             | Billonario 3       
+
 | ...           | ...               
+
 **2)**
+
 DELIMITER //
+
 CREATE PROCEDURE OrdenarTabla (IN tabla VARCHAR(100), IN campo_ordenamiento VARCHAR(100), IN orden VARCHAR(50))
+
 BEGIN   -- se escribe la tabla, campo y el tipo de orden by(asc o desc). Devuelve el select ordenado como le pasamos en el call().
+
     DECLARE ordenamiento VARCHAR(10);
+    
     -- Determinar si el orden es ascendente o descendente
+    
     IF orden = 'ascendente' OR orden = 'ASC' THEN
-        SET ordenamiento := 'ASC';
+    
+	SET ordenamiento := 'ASC';
+    
     ELSEIF orden = 'descendente' OR orden = 'DESC' THEN
-        SET ordenamiento := 'DESC';
+    
+	SET ordenamiento := 'DESC';
+    
     ELSE
-        SELECT 'El tipo de orden no es válido. Debe ser "ascendente" o "descendente"' AS Error;
+    
+	SELECT 'El tipo de orden no es válido. Debe ser "ascendente" o "descendente"' AS Error;
+    
     END IF;
+    
     -- Ejecutar la consulta con el campo de ordenamiento y el tipo de ordenamiento especificados
+    
     SET @sql := CONCAT('SELECT * FROM ', tabla, ' ORDER BY ', campo_ordenamiento, ' ', ordenamiento);
+    
     PREPARE runsql FROM @sql;
+    
     EXECUTE runsql;
+    
     DEALLOCATE PREPARE runsql;
+
 END;
+
 •	**Descripción**: Ordena una tabla específica (tabla) por un campo de ordenamiento (campo_ordenamiento) en un tipo de orden específico (orden). Retorna un mensaje de error si el tipo de orden no es válido.
+
 •	**Uso**: CALL OrdenarTabla('billonarios', 'Edad', 'descendente');
+
 •	**Resultado Esperado**: 
+
 | IdBillonario  | NombreCompleto   
+
 | 5             | Nuevo Billonario 
+
 | 4             | Billonario 4       
+
 | 3             | Billonario 3      
+
 | ...           | ...              
 
 **3)**
+
 DELIMITER //
+
 CREATE PROCEDURE MacroPais (IN pais CHAR(20)) -- se escribe el nombre de un pais y devuelve los datos de la macroeonomia como pbi, ipc impuestos etc...
+
 BEGIN 
+
     DECLARE consulta VARCHAR(1000); 
+    
     IF pais <> '' THEN
-        SET consulta = CONCAT('SELECT IPCPais, PBIPais, EsperanzaVida, IngresosFiscales, TasaImpositiva, PoblacionPais FROM paises WHERE PaisResidencia = "', pais, '"');
+    
+	SET consulta = CONCAT('SELECT IPCPais, PBIPais, EsperanzaVida, IngresosFiscales, TasaImpositiva, PoblacionPais FROM paises WHERE PaisResidencia = "', pais, '"');
+      
       SET @sql = consulta;
-        PREPARE runsql FROM @sql;
-        EXECUTE runsql;
-        DEALLOCATE PREPARE runsql;
+      
+	PREPARE runsql FROM @sql;
+        
+	EXECUTE runsql;
+        
+	DEALLOCATE PREPARE runsql;
+    
     ELSE
+    
         SELECT 'Vuelva a ingresar el país' AS message;
+    
     END IF;
+
 END;
+
 •	**Descripción**: Retorna datos macroeconómicos para un país específico (pais). Muestra IPC, PBI, esperanza de vida, ingresos fiscales, tasa impositiva y población.
+
 •	**Uso**: CALL MacroPais('Estados Unidos');
+
 •	**Resultado Esperado**: 
+
 | IPCPais| PBIPais  | EsperanzaVida  
+
 | 2.5    | 21.4     | 76             
 
 **4)**
+
 DELIMITER //
+
 CREATE PROCEDURE CalcularPromedio (IN TABLA VARCHAR(100), IN COLUMNA VARCHAR(100)) -- se escribe la tabla y columna y devuelve un promedio de dicha columna
+
 BEGIN
+
     SET @promedio := 0;
+    
     SET @consulta := CONCAT('SELECT ROUND(AVG(', COLUMNA, '), 2) INTO @promedio FROM ', TABLA);
+    
     PREPARE runsql FROM @consulta;
+    
     EXECUTE runsql;
+    
     DEALLOCATE PREPARE runsql;
+    
     SELECT CONCAT('El promedio de ', COLUMNA, ' en la tabla ', TABLA, ' es: ', @promedio) AS MESSAGE;
+
 END;
+
 •	**Descripción**: Calcula y muestra el promedio de una columna específica (COLUMNA) en una tabla específica (TABLA).
+
 •	**Uso**: CALL CalcularPromedio('billonarios', 'Edad');
+
 •	**Resultado Esperado**:
+
 | MESSAGE                             
+
 | El promedio de Edad en la tabla ... 
 
 #### 7.3 SCRIPT DE TRIGGERS
+
 create table bitacoc
+
 ( -- creacion de tabla bitacoc para guardar la bitacora de los datos
+
 id int primary key auto_increment,
+
 usuario varchar(20),
+
 fecha date,
+
 hora time
+
 );
+
 **Tabla bitacoc**:
+
 •	**Descripción**: Esta tabla, llamada bitacoc, está diseñada para almacenar registros de bitácora que registran ciertas actividades relacionadas con los datos. Aquí tienes una descripción de cada columna en la tabla:
+
 •	**id** (int, clave primaria, autoincremental): Un identificador único para cada registro en la tabla. Se incrementa automáticamente con cada nueva entrada.
+
 •	**usuario** (varchar(20)): Almacena el nombre del usuario o la entidad asociada con la actividad registrada. En el contexto de los triggers proporcionados, esta columna podría contener el nombre de un billonario, una industria, o cualquier entidad relevante.
+
 •	**fecha** (date): Registra la fecha en la que se llevó a cabo la actividad.
+
 •	**hora** (time): Registra la hora exacta en la que se llevó a cabo la actividad.
-•	**Uso**: Esta tabla se utiliza para realizar un seguimiento de actividades específicas, como inserciones o actualizaciones, y proporciona un historial que puede ser útil para auditorías, seguimiento de cambios, o simplemente para tener un registro de las acciones realizadas en la base de datos.
+
+•	**Uso**: Esta tabla se utiliza para realizar un seguimiento de actividades específicas, como inserciones o actualizaciones, y proporciona un historial que puede ser útil para auditorías, seguimiento de cambios, o simplemente para tener un registro de las 
+acciones realizadas en la base de datos.
+
 •	**Ejemplo de Registro**:
+
 | id | usuario        | fecha      | hora     |
+
 •	| 1  | Nuevo Billonario | 2024-01-15 | 12:30:00 |
+
 •	| 2  | Antigua Industria | 2024-01-15 | 13:45:00 |
 
 **Nota: Esta tabla se utilizará para almacenar información generada por los triggers billo_log y auditoria_billonario, como se describió anteriormente.**
 
 **1)** 
+
 CREATE TRIGGER billo_log -- Actividad después de la inserción
+
 AFTER INSERT ON billonarios -- Se activa después de una inserción en 'billonarios'
+
 FOR EACH ROW 
+
 INSERT INTO bitacoc (usuario, fecha, hora) 
+
 VALUES (NEW.NombreCompleto, CURDATE(), CURTIME());
+
 -- Inserta en 'bitacoc' el nombre del usuario insertado en 'billonarios', junto con la fecha y la hora actuales
+
 •	**Descripción**: Este trigger se activa antes de una inserción en billonarios. Convierte el valor de NombreCompleto a mayúsculas antes de realizar la inserción.
+
 •	**Uso**: INSERT INTO billonarios (NombreCompleto, Edad, ...) VALUES ('nuevo billonario', 30, ...);
+
 •	**Resultado Esperado**: 
+
 | NombreCompleto| Edad
+
 | NUEVO BILLONARIO| 30  
 
 **2)**
+
 DELIMITER //
+
 CREATE TRIGGER convertir_a_mayusculas
+
 BEFORE INSERT ON billonarios
+
 FOR EACH ROW
+
 BEGIN
+
     -- Convierte el valor de 'NombreCompleto' a mayúsculas antes de la inserción
+    
     SET NEW.NombreCompleto = UPPER(NEW.NombreCompleto);
+
 END;
+
 //
+
 DELIMITER ;
 
 Trigger convertir_a_mayusculas:
+
 •	**Descripción**: Este trigger se activa antes de una inserción en billonarios. Convierte el valor de NombreCompleto a mayúsculas antes de realizar la inserción.
+
 •	**Uso**: INSERT INTO billonarios (NombreCompleto, Edad, ...) VALUES ('nuevo billonario', 30, ...);
+
 •	**Resultado Esperado**: 
+
 | NombreCompleto| Edad| 
+
 | NUEVO BILLONARIO| 30  | 
 
 **3)**
+
 DELIMITER //
+
 CREATE TRIGGER auditoria_billonario
+
 BEFORE UPDATE ON categoriasnegocio
+
 FOR EACH ROW
+
 BEGIN
+
     -- Registra en 'bitacoc' información sobre la actualización en 'categoriasnegocio'
+    
     INSERT INTO bitacoc (usuario, fecha, hora)
+    
     VALUES (OLD.Industria, CURDATE(), CURTIME());
+
 END;
+
 //
+
 DELIMITER ;
+
 Trigger auditoria_billonario:
+
 •	**Descripción**: Este trigger se activa antes de una actualización en la tabla categoriasnegocio. Registra en la tabla bitacoc información sobre la actualización en categoriasnegocio.
+
 •	**Uso**: UPDATE categoriasnegocio SET Industria = 'Nueva Industria' WHERE IdCategoria = 1;
+
 •	**Resultado Esperado**: 
+
 | id | usuario        | fecha      | hora     
+
 | 1  | Antigua Industria | 2024-01-15 | 13:45:00 
 
 Estos triggers proporcionan funcionalidades como la creación de registros de bitácora (billo_log), la conversión de valores antes de la inserción (convertir_a_mayusculas) y la auditoría de actualizaciones en otra tabla (auditoria_billonario).
@@ -503,368 +728,729 @@ Estos triggers proporcionan funcionalidades como la creación de registros de bi
 #### 7.4 SCRIPT DE VISTAS 
 
 1.	CategTitu
+
 •	**Objetivo**: Proporciona el nombre completo, categoría y título de los billonarios junto con las categorías de negocios correspondientes.
+
 •	**Tablas involucradas**: billonarios y categoriasnegocio.
+
 •	**Código:**  -- Nombre completo + categoria + titulo
+
 create view CategTitu as select IdBillonario, NombreCompleto, Categoria, Titulo FROM billonarios as b join categoriasnegocio as cn on b.IdBillonario = cn.IdCategoriaNegocio;
 
 2.	DatosPaises
+
 •	**Objetivo**: Presenta información detallada sobre países, incluyendo país, población, estado, ciudad y región de residencia.
+
 •	**Tablas involucradas**: paises y estados.
+
 •	**Codigo**: -- pais + poblacion + estado + ciudad + región
+
 create view DatosPaises as select PaisResidencia, PoblacionPais, estado, CiudadResidencia, RegiónResidencia from paises as p join estados as e on p.IdPais = e.IdPais;
+
 3.	IngresoRango
+
 •	**Objetivo**: Ofrece datos sobre el nombre completo, fuente de ingresos, patrimonio neto y rango de los billonarios en función de sus organizaciones y categorías de negocio.
+
 •	**Tablas involucradas**: billonarios, organizaciones y categoriasnegocio.
+
 •	**Código**: --Nombre Completo + Fuente Ingreso + Patrimonio Neto + Rango
-create view IngresoRango as select idPais ,NombreCompleto,             FuenteIngreso, PatrimonioNeto, Rango from billonarios as b join organizaciones as o on b.IdPais = o.IdOrganizacion  join categoriasnegocio as cn on o.IdOrganizacion = cn.IdCategoriaNegocio;
+
+create view IngresoRango as select idPais ,NombreCompleto,FuenteIngreso, PatrimonioNeto, Rango from billonarios as b join organizaciones as o on b.IdPais = o.IdOrganizacion  join categoriasnegocio as cn on o.IdOrganizacion = cn.IdCategoriaNegocio;
+
 4.	MacroPaises
+
 •	**Objetivo**: Esta vista proporciona datos macroeconómicos del país de residencia como la inflación, PBI, ingresos fiscales, tasa impositiva, latitud y longitud.
+
 •	**Tablas involucradas**: países y estados.
+
 •	**Codigo**: -- Pais de residencia + Inflacion + PBI + INGRESOS FISCALES + TASA IMPOSITIVA + LATITUD + LONGITUD DE PAIS  
+
 Create view MacroPaises as select PaisResidencia, IPCPais, PBIPais, IngresosFiscales, TasaImpositiva, LatitudPaísRes, LongitudPaísRes from paises as p join estados as e on p.IdPais = e.IdEstado GROUP BY p.PaisResidencia;
 
 5.	BilloDATOS
+
 •	**Objetivo**: Presenta información detallada sobre el Nombre Completo, Título, Patrimonio Neto, País de Residencia y Ciudad del billonario, relacionando múltiples tablas.
+
 •	**Tablas involucradas**: billonarios, organizaciones, categoriasnegocio, paises,estados.
+
 •	**Codigo**: -- Nombre Completo + titulo + patrimonio + pais + ciudad
+
 create view BilloDATOS as select NombreCompleto, Titulo, PatrimonioNeto, PaisResidencia, CiudadResidencia from billonarios as b  join organizaciones as o on b.IdPais = o.IdOrganizacion  join categoriasnegocio as cn on o.IdOrganizacion = cn.IdCategoriaNegocio join paises as p on p.IdPais= b.IdBillonario join estados as e on e.IdEstado = b.IdBillonario;
 
 6.	PbiIPCpais
+
 •	**Objetivo**: Muestra datos relevantes del país de residencia como el País, PBI e Inflación.
+
 •	**Tablas involucradas**: paises.
+
 •	**Código**: -- PAIS + PBI + INFLACION
+
 create view PbiIPCpais as select PaisResidencia, PBIPais, IPCPais from paises group by PaisResidencia;
+
 7.	PatrimonioEmpresa
+
 •	**Objetivo**: Presenta la fuente de ingresos y el patrimonio neto de las organizaciones.
+
 •	**Tablas involucradas**: organizaciones.
+
 •	**Código**: -- EMPRESA + PATRIMONIO
+
 create view PatrimonioEmpresa as select FuenteIngreso, PatrimonioNeto from organizaciones;
+
 8.	CumpleañosNombre
+
 •	**Objetivo**: muestra el Nombre Completo de los billonarios junto con su Fecha de Cumpleaños correspondiente. 
+
 •	**Tablas involucradas**: billonarios.
+
+
 •	**Código**: -- Nombre Completo – FechaCumpleanos
+
 CREATE  VIEW BirthdayName as select NombreCompleto, FechaCumpleanos FROM billonarios;
+
 9.	titulacion
+
 •	**Objetivo**: Ofrece el nombre completo y el título de los billonarios.
+
 •	**Tablas involucradas**: billonarios y categoriasnegocio.
+
 •	**Código**: -- Nombre completo + titulo
+
 create view titulacion as select NombreCompleto, titulo from billonarios as b join categoriasnegocio as cn on b.IdBillonario = cn.IdCategoriaNegocio;
+
 #### 7.5 SCRIPT DE CREATE TABLES  
+
 **Tabla Paises**:
+
 •	**Creación**: 
+
 -- Creación de la tabla Países
+
 CREATE TABLE IF NOT EXISTS Paises (
+
     IdPais INT PRIMARY KEY,
-	IdEstado INT,
+
+ IdEstado INT,
+ 
     IPCPais DECIMAL(20, 2) NULL,
+    
     PBIPais DECIMAL(20, 2) NULL,
+    
     InscEduTerc DECIMAL(6, 2) NULL,
+    
     MatEduPrim DECIMAL(6, 2) NULL,
+    
     EsperanzaVida DECIMAL(6, 2) NULL,
+    
     IngresosFiscales DECIMAL(20, 2) NULL,
+    
     TasaImpositiva DECIMAL(6, 2) NULL,
+    
     PoblacionPais INT NULL,
+    
     PaisResidencia VARCHAR(255) NULL
+
 );
+
 •	**Tipo de Datos**:
+
 •	**IdPais**: INT (Clave primaria, autoincremental)
+
 •	**IPCPais, PBIPais, InscEduTerc, MatEduPrim, EsperanzaVida, IngresosFiscales, TasaImpositiva**: DECIMAL(20, 2)
+
 •	**PoblacionPais**: INT
+
 •	**PaisResidencia**: VARCHAR(255)
+
 **Tabla Estados**:
+
 •	**Creación**: 
+
 -- Creación de la tabla Estados
+
 CREATE TABLE IF NOT EXISTS Estados (
+
     IdEstado INT PRIMARY KEY,
+    
     RegiónResidencia VARCHAR(255) NULL,
+    
     CiudadResidencia VARCHAR(255) NULL,
+    
     Estado VARCHAR(255) NULL,
+    
     LatitudPaísRes DECIMAL(9, 6) NULL,
+    
     LongitudPaísRes DECIMAL(9, 6) NULL,
+    
     FOREIGN KEY (IdPais) REFERENCES Paises(IdPais)
+
 );
+
 •	**Tipo de Datos**:
+
 •	**IdEstado**: INT (Clave primaria)
+
 •	**RegiónResidencia, CiudadResidencia, Estado**: VARCHAR(255)
+
 •	**LatitudPaísRes, LongitudPaísRes**: DECIMAL(9, 6)
+
 •	**IdPais**: INT (Clave foránea referenciando a Paises)
+
 **Tabla CategoriasNegocio**:
+
 •	**Creación**: 
+
 -- Creación de la tabla Categorías de Negocio
+
 CREATE TABLE IF NOT EXISTS CategoriasNegocio (
+
     IdCategoriaNegocio INT PRIMARY KEY,
+
     Categoria VARCHAR(255) NULL,
+    
     Industria VARCHAR(255) NULL,
+    
     HechoPorSiMismo BOOLEAN NULL,
+    
     Titulo VARCHAR(255) NULL,
+    
     Rango VARCHAR(255) NULL
+
 );
+
 •	**Tipo de Datos**:
+
 •	**IdCategoriaNegocio**: INT (Clave primaria)
+
 •	**Categoria, Industria, Titulo, Rango**: VARCHAR(255)
+
 •	**HechoPorSiMismo**: BOOLEAN
+
 **Tabla Organizaciones**:
+
 •	**Creación**: 
+
 -- Creación de la tabla Organizaciones
+
 CREATE TABLE IF NOT EXISTS Organizaciones (
+
     IdOrganizacion INT PRIMARY KEY,
+    
     FuenteIngreso VARCHAR(255) NULL,
+    
     Organizacion VARCHAR(255) NULL,
+    
     PatrimonioNeto DECIMAL(15, 2) NULL,
+    
     FuenteRiqueza VARCHAR(255) NULL
+
 );
+
+
 •	**Tipo de Datos**:
+
 •	**IdOrganizacion**: INT (Clave primaria)
+
 •	**FuenteIngreso, Organizacion, FuenteRiqueza**: VARCHAR(255)
+
 •	**PatrimonioNeto**: DECIMAL(15, 2)
+
 **Tabla Billonarios**:
+
 •	**Creación**: 
+
 -- Creación de la tabla Billonarios
+
 CREATE TABLE IF NOT EXISTS Billonarios (
+
     IdBillonario INT PRIMARY KEY,
+    
     NombreCompleto VARCHAR(255) NULL,
+    
     Edad INT NULL,
+    
     Genero VARCHAR(1) NULL,
+    
     FechaCumpleanos DATE NULL,
+    
     IdPais INT NULL,
+    
     IdEstado INT NULL,
+    
     IdCategoriaNegocio INT NULL,
+    
     IdOrganizacion INT NULL,
+    
     Apellido VARCHAR(255) NULL,
+    
     Nombre VARCHAR(255) NULL,
+    
     FOREIGN KEY (IdPais) REFERENCES Paises(IdPais),
+    
     FOREIGN KEY (IdEstado) REFERENCES Estados(IdEstado),
+    
     FOREIGN KEY (IdCategoriaNegocio) REFERENCES CategoriasNegocio(IdCategoriaNegocio),
+    
     FOREIGN KEY (IdOrganizacion) REFERENCES Organizaciones(IdOrganizacion)
+
 );
+
 •	**Tipo de Datos**:
+
 •	**IdBillonario**: INT (Clave primaria)
+
 •	**NombreCompleto, Genero, FechaCumpleanos, Apellido, Nombre**: VARCHAR(255)
+
 •	**Edad**: INT
+
 •	**IdPais, IdEstado, IdCategoriaNegocio, IdOrganizacion**: INT (Claves foráneas referenciando a tablas relacionadas)
+
 **Selección de Base de Datos Billonary**:
+
 •	**Creación**: 
+
 -- Seleccionar la base de datos para futuras consultas
+
 USE Billonary;
+
 •	**Nota: Selecciona la base de datos Billonary para futuras consultas.**
+
 #### 7.6 SCRIPT DE TRANSACCIONES
+
 START TRANSACTION;
+
 DELETE FROM Billonarios WHERE IdBillonario IN (1, 2, 3);
+
 SELECT * FROM Billonarios WHERE IdBillonario IN (1, 2, 3);
+
 -- -- ROLLBACK;
+
 -- -- COMMIT; 
 
 **Eliminar Registros de la Tabla Billonarios**:
+
 •	START TRANSACTION;: Inicia una nueva transacción.
+
 •	DELETE FROM Billonarios WHERE IdBillonario IN (1, 2, 3);: Elimina los registros con ID 1, 2 y 3 de la tabla Billonarios.
+
 •	SELECT * FROM Billonarios WHERE IdBillonario IN (1, 2, 3);: Valida que los registros eliminados no estén presentes en la tabla.
+
 •	-- ROLLBACK;: Comentario para prevenir una reversión accidental.
+
 •	-- COMMIT;: Comentario para prevenir una confirmación accidental.
 
 START TRANSACTION;
+
 SAVEPOINT before4;
+
 INSERT INTO Organizaciones (FuenteIngreso, Organizacion, PatrimonioNeto, FuenteRiqueza) 
+
 VALUES ('Fuente1', 'Organizacion1', 848584, 'Riqueza1'),
+
 ('Fuente2', 'Organizacion2', 745222, 'Riqueza2'),
+
 ('Fuente3', 'Organizacion3', 754545, 'Riqueza3'),
+
 ('Fuente4', 'Organizacion4', 554545, 'Riqueza4');
+
 SAVEPOINT after4;
+
 INSERT INTO Organizaciones (FuenteIngreso, Organizacion, PatrimonioNeto, FuenteRiqueza) VALUES
+
   ('Fuente6', 'Organizacion6',12323, 'Riqueza6'),
+  
   ('Fuente7', 'Organizacion7',21323 , 'Riqueza7'),
+  
   ('Fuente8', 'Organizacion8',321321, 'Riqueza8'),
+  
   ('Fuente9', 'Organizacion9', 213213, 'Riqueza9');
+
 -- elimina el savepoint de los primeros 4 registros insertados
+
 -- RELEASE SAVEPOINT before4;
+
 -- elimina el savepoint de los ultimos 4 registros insertados
+
 -- RELEASE SAVEPOINT after4;
+
 -- ROLLBACK; -- Descomenta para revertir la transacción
+
 -- COMMIT; -- Descomenta para confirmar la transacción
+
 **Insertar Registros en la Tabla Organizaciones**:
+
 •	START TRANSACTION;: Inicia una nueva transacción.
+
 •	SAVEPOINT before4;: Crea un punto de guardado antes de la inserción de los primeros 4 registros.
+
 •	INSERT INTO Organizaciones (...);: Inserta 8 registros en total en la tabla Organizaciones.
+
 •	SAVEPOINT after4;: Crea un segundo punto de guardado después de la inserción de los primeros 4 registros.
+
 •	-- RELEASE SAVEPOINT before4;: Comentario, si se descomenta, libera el punto de guardado antes de los primeros 4 registros.
+
 •	-- RELEASE SAVEPOINT after4;: Comentario, si se descomenta, libera el punto de guardado después de los primeros 4 registros.
+
 •	-- ROLLBACK;: Comentario para prevenir una reversión accidental.
+
 •	-- COMMIT;: Comentario para prevenir una confirmación accidental.
 
+
 #### 7.8 SCRIPT DE CREATE USERS
+
 Crear Usuario 'Coder' con Permisos de Solo Lectura:
+
 CREATE USER 'Coder'@'localhost' IDENTIFIED BY 'coderbeca'; GRANT SELECT ON billonary.* TO 'Coder'@'localhost'; REVOKE DELETE ON billonary.* FROM 'Coder'@'localhost'; 
+
 •	**Crea un usuario llamado 'Coder' con contraseña 'coderbeca'**.
+
 •	**Le concede permisos de lectura (SELECT) en todas las tablas de la base de datos billonary**.
+
 •	**Revoca el permiso de eliminar registros (DELETE)**.
 
 Crear Usuario 'lucasALM' con Permisos de Inserción, Lectura y Actualización:
+
 CREATE USER 'lucasALM'@'localhost' IDENTIFIED BY 'lucasabad'; GRANT INSERT, SELECT, UPDATE ON billonary.* TO 'lucasALM'@'localhost'; REVOKE DELETE ON billonary.* FROM 'lucasALM'@'localhost'; 
+
 •	**Crea un usuario llamado 'lucasALM' con contraseña 'lucasabad'**.
+
 •	**Le concede permisos de inserción (INSERT), lectura (SELECT) y actualización (UPDATE) en todas las tablas de la base de datos billonary**.
+
 •	**Revoca el permiso de eliminar registros (DELETE)**.
+
 **Visualizar Usuarios y sus Permisos**:
+
 SELECT User, Host FROM mysql.user;
+
 SHOW GRANTS FOR 'Coder'@'localhost';
+
 SHOW GRANTS FOR 'lucasALM'@'localhost';
+
 •	**Muestra la lista de usuarios en el sistema MySQL**.
+
 •	**Muestra los permisos concedidos al usuario 'Coder'@'localhost'**.
+
 •	**Muestra los permisos concedidos al usuario 'lucasALM'@'localhost'**.
+
+
 •	**Este código configura dos usuarios con diferentes conjuntos de permisos en la base de datos billonary**.
+
 #### 8) SCRIPT DE INSERT
+
    **8.1 Script Inserción de datos en Billonarios**
+
 INSERT INTO billonary.billonarios (IdBillonario, NombreCompleto, Edad, Genero, FechaCumpleanos, IdPais, IdEstado, IdCategoriaNegocio, IdOrganizacion, Apellido, Nombre)
+
 VALUES
+
 (1, 'Bernard Arnault & family', 74, 'M', '1949-05-03', 1, 1, 1, 1, 'Arnault', 'Bernard'),
+
 (2, 'Elon Musk', 51, 'M', '1971-06-28', 2, 2, 2, 2, 'Musk', 'Elon'),
+
 (3, 'Jeff Bezos', 59, 'M', '1964-12-01', 3, 3, 3, 3, 'Bezos', 'Jeff'),
+
 (4, 'Larry Ellison', 78, 'M', '1944-08-17', 4, 4, 4, 4, 'Ellison', 'Larry'),
+
 (5, 'Warren Buffett', 92, 'M', '1930-08-30', 5, 5, 5, 5, 'Buffett', 'Warren'),
+
 (6, 'Bill Gates', 67, 'M', '1955-10-28', 6, 6, 6, 6, 'Gates', 'Bill'),
+
 (7, 'Michael Bloomberg', 81, 'M', '1942-02-14', 7, 7, 7, 7, 'Bloomberg', 'Michael'),
+
 (8, 'Carlos Slim Helu & family', 83, 'M', '1940-01-28', 8, 8, 8, 8, 'Slim Helu', 'Carlos'),
+
 (9, 'Mukesh Ambani', 65, 'M', '1957-04-19', 9, 9, 9, 9, 'Ambani', 'Mukesh'),
+
 (10, 'Steve Ballmer', 67, 'M', '1956-03-24', 10, 10, 10, 10, 'Ballmer', 'Steve'),
+
 (11, 'Francoise Bettencourt Meyers & family', 69, 'F', '1953-10-07', 11, 11, 11, 11, 'Bettencourt Meyers', 'Francoise');
+
 **8.2 Script Inserción de datos en CategoriasNegocio**
+
 INSERT INTO billonary.CategoriasNegocio (IdCategoriaNegocio, Categoria, Industria, HechoPorSiMismo, Titulo, Rango)
+
 VALUES
+
 (1, 'Fashion & Retail', 'Fashion & Retail', FALSE, 'Chairman and CEO', '1'),
+
 (2, 'Automotive', 'Automotive', TRUE, 'CEO', '2'),
+
 (3, 'Technology', 'Technology', TRUE, 'Chairman and Founder', '3'),
+
 (4, 'Technology', 'Technology', TRUE, 'CTO and Founder', '4'),
+
 (5, 'Finance & Investments', 'Finance & Investments', TRUE, 'CEO', '5'),
+
 (6, 'Technology', 'Technology', TRUE, 'Cochair', '6'),
+
 (7, 'Media & Entertainment', 'Media & Entertainment', TRUE, 'CEO', '7'),
+
 (8, 'Telecom', 'Telecom', TRUE, 'Honorary Chairman', '8'),
+
 (9, 'Diversified', 'Diversified', FALSE, 'Founder and Chairman', '9'),
+
 (10, 'Technology', 'Technology', TRUE, 'Owner', '10'),
+
 (11, 'Fashion & Retail', 'Fashion & Retail', FALSE, NULL, '11');
+
  **8.3 Script Inserción de datos en Estados**
+
 INSERT INTO billonary.Estados (IdEstado, IdPais, RegiónResidencia, CiudadResidencia, Estado, LatitudPaísRes, LongitudPaísRes)
+
 VALUES
+
 (1, NULL, NULL, 'Paris', NULL, '46.227.638', '2.213.749'),
+
 (2, NULL, 'South', 'Austin', 'Texas', '3.709.024', '-95.712.891'),
+
 (3, NULL, 'West', 'Medina', 'Washington', '3.709.024', '-95.712.891'),
+
 (4, NULL, 'West', 'Lanai', 'Hawaii', '3.709.024', '-95.712.891'),
+
 (5, NULL, 'Midwest', 'Omaha', 'Nebraska', '3.709.024', '-95.712.891'),
+
 (6, NULL, 'West', 'Medina', 'Washington', '3.709.024', '-95.712.891'),
+
 (7, NULL, 'Northeast', 'New York', 'New York', '3.709.024', '-95.712.891'),
+
 (8, NULL, NULL, 'Mexico City', NULL, '23.634.501', '-102.552.784'),
+
 (9, NULL, NULL, 'Mumbai', NULL, '20.593.684', '7.896.288'),
+
 (10, NULL, 'West', 'Hunts Point', 'Washington', '3.709.024', '-95.712.891'),
+
 (11, NULL, NULL, 'Paris', NULL, '46.227.638', '2.213.749');
+
+   
    **8.4 Script Inserción de datos en Organizaciones**
+
 INSERT INTO billonary.Organizaciones (IdOrganizacion, FuenteIngreso, Organizacion, PatrimonioNeto, FuenteRiqueza)
+
 VALUES
+
 (1, 'LVMH', 'LVMH Moët Hennessy Louis Vuitton', 211000.00, 'U'),
+
 (2, 'Tesla, SpaceX', 'Tesla', 180000.00, 'D'),
+
 (3, 'Amazon', 'Amazon', 114000.00, 'D'),
+
 (4, 'Oracle', 'Oracle', 107000.00, 'U'),
+
 (5, 'Berkshire Hathaway', 'Berkshire Hathaway Inc. (Cl A)', 106000.00, 'D'),
+
 (6, 'Microsoft', 'Bill & Melinda Gates Foundation', 104000.00, 'D'),
+
 (7, 'Bloomberg LP', 'Bloomberg', 94500.00, 'U'),
+
 (8, 'Telecom', 'América Móvil', 93000.00, 'U'),
+
 (9, 'Diversified', 'Reliance Industries', 83400.00, 'D'),
+
 (10, 'Microsoft', 'Los Angeles Clippers', 80700.00, 'D'),
+
 (11, 'L\'Oréal', NULL, 80500.00, 'U');
+
   **8.5 Script Inserción de datos en Países**
+
 INSERT INTO billonary.Paises (IdPais, IPCPais, PBIPais, InscEduTerc, MatEduPrim, EsperanzaVida, IngresosFiscales, TasaImpositiva, PoblacionPais, PaisResidencia)
+
 VALUES (1, '110.05', '2,715,518,274,227', 65.6, 102.5, 82.5, 24.2, 60.7, 67059467, 'France'),
+
 (2, '117.24', '21,427,700,000,000', 46.2, 101.8, 78.5, 9.6, 36.6, 328239523, 'United States'),
+
 (3, '117.24', '21,427,700,000,000', 46.2, 101.8, 78.5, 9.6, 36.6, 328239523, 'United States'),
+
 (4, '117.24', '21,427,700,000,000', 46.2, 101.8, 78.5, 9.6, 36.6, 328239523, 'United States'),
+
 (5, '117.24', '21,427,700,000,000', 46.2, 101.8, 78.5, 9.6, 36.6, 328239523, 'United States'),
+
 (6, '117.24', '21,427,700,000,000', 46.2, 101.8, 78.5, 9.6, 36.6, 328239523, 'United States'),
+
 (7, '117.24', '21,427,700,000,000', 46.2, 101.8, 78.5, 9.6, 36.6, 328239523, 'United States'),
+
 (8, '141.54', '1,258,286,717,125', 40.2, 105.8, 75, 13.1, 55.1, 126014024, 'Mexico'),
+
 (9, '180.44', '2,611,000,000,000', 28.1, 113, 69.4, 11.2, 49.7, 1366417754, 'India'),
+
 (10, '117.24', '21,427,700,000,000', 46.2, 101.8, 78.5, 9.6, 36.6, 328239523, 'United States'),
+
 (11, '110.05', '2,715,518,274,227', 65.6, 102.5, 82.5, 24.2, 60.7, 67059467, 'France');
+
 **9) Informes generados en base a la información**
+
 **Vista 1**: CantidadPorGenero
+
 CREATE VIEW CantidadPorGenero AS 
+
 SELECT Genero as "Género", COUNT(*) as "Cantidad"
+
 FROM Billonarios 
+
 WHERE Genero IS NOT NULL
+
 GROUP BY Genero;
 
 **Finalidad para el análisis**:
+
 •	Proporciona una visión de la distribución de billonarios según su género.
+
 •	Facilita el análisis de la representación de género en la lista de billonarios.
+
 **Vista 2**: BILLONARIOSxPAIS
+
 CREATE VIEW BILLONARIOSxPAIS AS
+
 SELECT P.PaisResidencia, COUNT(PaisResidencia) as CantidadBillonariosXpais 
+
 FROM paises P 
+
 JOIN Billonarios B ON P.IdPais = B.IdPais
+
 GROUP BY P.PaisResidencia 
+
 ORDER BY CantidadBillonariosXpais DESC 
+
 LIMIT 10;
+
 **Finalidad para el análisis**:
+
 •	Ofrece información sobre la distribución geográfica de billonarios.
+
 •	Identifica los países con el mayor número de billonarios.
+
 **Vista 3**: PatrimonioPorOrganizacion
+
 CREATE VIEW PatrimonioPorOrganizacion AS 
+
 SELECT Organizacion, 
+
     SUM(PatrimonioNeto) as TotalRiqueza,
+    
     CONCAT(FORMAT((SUM(PatrimonioNeto) / (SELECT SUM(PatrimonioNeto) FROM organizaciones)) * 100, 2), '%') as PorcentajeRiqueza
+
 FROM organizaciones 
+
 GROUP BY Organizacion 
+
 LIMIT 5;
+
 **Finalidad para el análisis**:
+
 •	Proporciona una visión de la distribución del patrimonio neto entre las organizaciones.
+
 •	Ayuda a identificar las organizaciones con mayor contribución al total de riqueza.
+
 •	El límite (LIMIT) se utiliza para enfocarse en las primeras 5 organizaciones más ricas.
+
 **Vista 4**: PromedioRiqueza
+
 CREATE VIEW PromedioRiqueza AS
+
 SELECT CONCAT('$', FORMAT(AVG(PatrimonioNeto), 2)) as PromedioRiquezaPorPersona
+
 FROM organizaciones;
+
 **Finalidad para el análisis**:
+
 •	Proporciona el promedio del patrimonio neto por persona en la tabla de organizaciones.
+
 •	Presenta el resultado en un formato más legible con dos decimales y el símbolo de pesos.
+
 Estas vistas proporcionan una variedad de perspectivas y métricas que pueden ser útiles para el análisis financiero y la comprensión de la distribución de la riqueza en el conjunto de datos.
+
 #### 10) Herramientas y tecnologías usadas
+
 **MySQL**:
 
-**Descripción**: En mi proyecto, utilicé MySQL como el motor de base de datos principal. Este sistema de gestión de bases de datos relacional de código abierto fue esencial para almacenar y administrar eficientemente los datos del proyecto. Me permitió ejecutar consultas SQL para interactuar con la base de datos, realizando operaciones como inserción, actualización, eliminación y consulta de datos.
+**Descripción**: En mi proyecto, utilicé MySQL como el motor de base de datos principal. Este sistema de gestión de bases de datos relacional de código abierto fue esencial para almacenar y administrar eficientemente los datos del proyecto. Me permitió ejecutar 
+
+consultas SQL para interactuar con la base de datos, realizando operaciones como inserción, actualización, eliminación y consulta de datos.
+
 **Uso en el proyecto**: Empleé MySQL como la columna vertebral de la gestión de datos en mi proyecto. Las consultas SQL se convirtieron en herramientas esenciales para llevar a cabo operaciones diversas en la base de datos.
+
 **Excel**: 
+
 **Descripción**: Microsoft Excel fue una herramienta fundamental en mi proyecto. Esta hoja de cálculo ampliamente utilizada facilitó la manipulación y el análisis de datos, permitiendo importar, transformar y visualizar información de manera eficiente.
-**Uso en el proyecto**: Excel desempeñó un papel crucial al abrir y manipular el dataset inicial en formato CSV. Su capacidad para importar, transformar y analizar datos fue de gran utilidad, especialmente en las etapas de análisis preliminares antes de cargar los datos en MySQL.
+
+**Uso en el proyecto**: Excel desempeñó un papel crucial al abrir y manipular el dataset inicial en formato CSV. Su capacidad para importar, transformar y analizar datos fue de gran utilidad, especialmente en las etapas de análisis preliminares antes de cargar los 
+
+datos en MySQL.
+
 **Word**:
-**Descripción**: Microsoft Word fue mi elección para la creación de documentos detallados en el proyecto. Este procesador de texto ampliamente utilizado proporcionó las herramientas necesarias para elaborar documentación, desde la introducción y los objetivos hasta la descripción de la situación problemática y otros aspectos importantes del proyecto.
+
+**Descripción**: Microsoft Word fue mi elección para la creación de documentos detallados en el proyecto. Este procesador de texto ampliamente utilizado proporcionó las herramientas necesarias para elaborar documentación, desde la introducción y los objetivos hasta la 
+
+descripción de la situación problemática y otros aspectos importantes del proyecto.
+
 **Uso en el proyecto**: Word fue mi aliado para plasmar la documentación detallada del proyecto, brindando un formato estructurado para aspectos clave del trabajo.
+
 **GitHub**:                     
-**Descripción**: GitHub se convirtió en mi plataforma principal para la gestión de versiones y la colaboración. Al utilizar el sistema de control de versiones Git, GitHub permitió almacenar y colaborar eficazmente en proyectos de software, incluyendo scripts SQL y otros documentos del proyecto.
+
+**Descripción**: GitHub se convirtió en mi plataforma principal para la gestión de versiones y la colaboración. Al utilizar el sistema de control de versiones Git, GitHub permitió almacenar y colaborar eficazmente en proyectos de software, incluyendo scripts SQL y 
+
+otros documentos del proyecto.
+
 **Uso en el proyecto**: GitHub fue la base para alojar y gestionar repositorios del proyecto, proporcionando un entorno propicio para el seguimiento de cambios, la colaboración y el versionamiento del código y otros documentos.
+
 **draw.io**:
  
 **Descripción**: draw.io, una herramienta de diagramación en línea, se destacó en mi proyecto al permitir la creación de diversos tipos de diagramas, incluyendo modelos entidad-relación (ER).
-**Uso en el proyecto**: draw.io fue la herramienta elegida para diseñar el modelo entidad-relación (ER) del proyecto. Este tipo de diagrama se convirtió en un recurso invaluable para visualizar la estructura de la base de datos y comprender las relaciones entre las entidades.
-Cada una de estas herramientas desempeñó un papel esencial en diferentes etapas de mi proyecto, contribuyendo a su desarrollo de manera eficiente y organizada. La integración de estas herramientas fue clave para el éxito y la claridad en la gestión de datos y documentación
+
+**Uso en el proyecto**: draw.io fue la herramienta elegida para diseñar el modelo entidad-relación (ER) del proyecto. Este tipo de diagrama se convirtió en un recurso invaluable para visualizar la estructura de la base de datos y comprender las relaciones entre las 
+
+entidades.
+
+Cada una de estas herramientas desempeñó un papel esencial en diferentes etapas de mi proyecto, contribuyendo a su desarrollo de manera eficiente y organizada. La integración de estas herramientas fue clave para el éxito y la claridad en la gestión de datos y 
+
+documentación
+
 #### 11) Futuras Líneas
+
 **Implementación de Backup y Recuperación**:  
+
 La seguridad y resiliencia de la base de datos son aspectos críticos para garantizar la continuidad de nuestro proyecto. He diseñado un plan de backup y recuperación para mitigar posibles pérdidas de datos y garantizar la rápida restauración en caso de incidentes.
+
 **Estrategia de Backup**:
+
 **Frecuencia de Copias de Seguridad**:
+
 •	Implementaré copias de seguridad diarias de la base de datos de billonarios para garantizar la captura regular de los cambios.
+
 **Tipos de Backup**:
+
 •	Realizaré backups completos diarios, respaldando toda la base de datos.
+
 •	Además, llevaré a cabo backups incrementales durante la semana para reducir el tiempo y el espacio de almacenamiento requerido.
+
    Almacenamiento de Copias de Seguridad:
-•	Las copias de seguridad se almacenarán en un servidor dedicado con redundancia para evitar la pérdida de datos por fallos en un único punto.
+
+•Las copias de seguridad se almacenarán en un servidor dedicado con redundancia para evitar la pérdida de datos por fallos en un único punto.
+
 **Proceso de Recuperación**:
+
 1.	**Procedimiento de Restauración**:
+
 •	En caso de pérdida de datos o fallo del sistema, activaré inmediatamente el procedimiento de restauración.
+
 2.	**Pruebas Periódicas de Recuperación**:
+
 •	Realizaré pruebas periódicas de recuperación para garantizar la efectividad del proceso y la integridad de los datos restaurados.
+
 3.	**Registros Detallados de Recuperación**:
+
 •	Mantendré registros detallados de cada proceso de recuperación, indicando fechas, horas y acciones realizadas.
 
 **Consideraciones Específicas para la Base de Datos de Billonarios**:
+
 1.	**Datos Sensibles y Críticos**:
+
 •	Dado que nuestra base de datos de billonarios puede contener información sensible y crítica, prestaré especial atención a la seguridad y privacidad durante los procesos de backup y recuperación.
+
 2.	**Consistencia de Datos**:
+
 •	Implementaré mecanismos para garantizar la consistencia de los datos durante las operaciones de backup y recuperación.
+
 3.	**Automatización de Procesos**:
+
 •	Automatizaré los procesos de backup y recuperación para minimizar la intervención humana y reducir la posibilidad de errores.
+
