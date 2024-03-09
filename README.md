@@ -1,13 +1,18 @@
+Billonario$
+ 
 
-###Billonario$
 
-Autor: **LUCAS EMIR ABAD CANCINOS**
+
+
+
+Autor: LUCAS EMIR ABAD CANCINOS
 Profesor: Gabriel Almiñana
 Tutor: Natalie Bassano – Ariel Annone
 Comisión: 50050
 Fecha de entrega: 22/1/2024
 
-**Índice**
+
+Índice
 1. Introducción
 2. Objetivo
 3. Situación problemática
@@ -22,15 +27,18 @@ Fecha de entrega: 22/1/2024
    7.5 Script Create tables
    7.6 Script Transacciones
    7.7Script System Users 
-9. Scripts de inserción de datos
+8. Scripts de inserción de datos
    8.1 Script Inserción de datos en Billonarios
    8.2 Script Inserción de datos en CategoriasNegocio
    8.3 Script Inserción de datos en Estados
    8.4 Script Inserción de datos en Organizaciones
    8.5 Script Inserción de datos en Países
-10. Informes generados
-11. Herramientas y tecnologías usadas
-12. Futuras líneas
+9. Informes generados
+10. Herramientas y tecnologías usadas
+11. Futuras líneas
+
+
+
 
 
 ####  **1) Introducción:**
