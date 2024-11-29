@@ -32,7 +32,7 @@
 ---
 
 ## 🌟 **1) Introducción**
-El proyecto **Billonarios** explora el universo de los individuos más ricos del mundo mediante un análisis exhaustivo de datos. Se utilizan cinco tablas clave para detallar información personal, económica y empresarial, proporcionando una narrativa completa del éxito financiero global.  
+El proyecto **Billonariosgit a  ** explora el universo de los individuos más ricos del mundo mediante un análisis exhaustivo de datos. Se utilizan cinco tablas clave para detallar información personal, económica y empresarial, proporcionando una narrativa completa del éxito financiero global.  
 
 ---
 
