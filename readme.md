@@ -1,4 +1,4 @@
-# 💼 **Proyecto BillonarioS**
+# 💼 **Proyecto Billonarios**
 
 ## 📄 **Información del Proyecto**
 - **Autor**: LUCAS EMIR ABAD CANCINOS  
